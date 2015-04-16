@@ -7,20 +7,21 @@ using Quiron.LojaVirtual.Dominio.Repositorio;
 
 namespace Quiron.LojaVirtual.Web.Controllers
 {
-    public class ProdutosController : Controller
+    public class VitrineController : Controller
     {
         private ProdutosRepositorio _repositorio;
+        public int ProdutosPorPagina = 3;
 
-        // GET: Produtos
-        public ActionResult Index()
+        // GET: Vitrine
+        public ActionResult ListaProdutos(int pagina = 1)
         {
-            // cria o objeto 
             _repositorio = new ProdutosRepositorio();
 
-            // retorna uma lista com os 10 primeiro "TOP" do SQL
-            var produtos = _repositorio.Produtos.Take(3);
+            var produtos = _repositorio.Produtos
+                .OrderBy(p => p.Descricao)
+            .Skip((pagina - 1) * ProdutosPorPagina)
+            .Take(ProdutosPorPagina);
 
-            
 
             return View(produtos);
         }
